@@ -7,7 +7,7 @@
     --bg-primary: #cccccc;
     --bg-secondary: #ffffff;
     --text-color: #333;
-    --header-bg: #c4e6ff; /* Ajustado: era e3f2fd, mantendo c4e6ff da sua última cópia */
+    --header-bg: #c4e6ff;
     --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     --border-color: rgb(189, 189, 189);
     --input-bg: #ffffff;
@@ -32,8 +32,8 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: var(--bg-primary); 
-    color: var(--text-color); 
+    background-color: var(--bg-primary);
+    color: var(--text-color);
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -42,7 +42,7 @@ h1 {
     color: var(--text-color);
     font-size: 2.2em;
     font-weight: 600;
-    margin: 0; 
+    margin: 0;
 }
 
 h2 {
@@ -56,12 +56,12 @@ h2 {
 }
 
 section {
-    background-color: var(--bg-secondary); 
+    background-color: var(--bg-secondary);
     padding: 25px;
     margin-bottom: 25px;
-    border-radius: 12px; 
-    box-shadow: var(--card-shadow); 
-    border: 1px solid var(--border-color); 
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
@@ -70,6 +70,21 @@ section {
     font-weight: 700;
     color: var(--text-color);
 }
+
+/* 📱 AJUSTES GERAIS PARA TELAS PEQUENAS (420px e abaixo) */
+@media (max-width: 420px) {
+    body {
+        padding: 10px; /* Reduz o padding para ganhar espaço */
+    }
+    h1 {
+        font-size: 1.6em; /* Torna o título menor */
+    }
+    section {
+        padding: 15px; /* Reduz o padding das seções */
+        margin-bottom: 15px;
+    }
+}
+
 
 /* =========================================================================
    2. LAYOUT GRID E CENTRALIZAÇÃO
@@ -82,42 +97,78 @@ section {
     margin-bottom: 30px;
     border-bottom: 2px solid var(--border-color);
     padding-bottom: 10px;
-    position: relative; 
+    position: relative;
 }
 
 .main-header-container h1 {
-    text-align: center; 
-    flex-grow: 1; 
+    text-align: center;
+    flex-grow: 1;
     margin: 0;
 }
 
 #theme-toggle {
     position: absolute;
     right: 0;
-    margin-right: 20px; 
+    margin-right: 20px;
 }
+
+/* 📱 AJUSTES DO CABEÇALHO PARA MOBILE */
+@media (max-width: 768px) {
+    .main-header-container {
+        padding-right: 80px; /* Cria espaço para o toggle */
+    }
+    #theme-toggle {
+        right: 10px;
+        margin-right: 0;
+    }
+    .main-header-container h1 {
+        font-size: 2em;
+        text-align: left;
+    }
+}
+@media (max-width: 420px) {
+    .main-header-container {
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+    }
+    #theme-toggle {
+        position: static; /* Volta para o fluxo normal */
+        margin-right: 0;
+    }
+}
+
 
 .header-app {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--header-bg); 
+    background-color: var(--header-bg);
     padding: 15px 25px;
     border-radius: 12px;
     margin-bottom: 25px;
     border: none;
 }
-
-.header-app p {
-    font-size: 1.5em;
-    margin: 0;
-    padding-right: 20px;
+@media (max-width: 480px) {
+    .header-app {
+        flex-direction: column;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+        align-items: flex-start;
+    }
+    .header-app p {
+        font-size: 1.2em;
+        padding-right: 0;
+        margin-bottom: 10px;
+    }
 }
+
 
 .analise-container {
     display: grid;
-    grid-template-columns: 200px 1fr 400px; 
-    gap: 25px; 
+    grid-template-columns: 200px 1fr 400px;
+    gap: 25px;
     margin-bottom: 25px;
     align-items: center;
 }
@@ -127,11 +178,11 @@ section {
     max-width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center; 
+    justify-content: center;
 }
 
 #nova-transacao {
-    grid-column: 2 / 3; 
+    grid-column: 2 / 3;
     max-width: 100%;
 }
 
@@ -140,6 +191,7 @@ section {
     min-width: auto;
 }
 
+/* 🚨 MANTIDO: Media Query principal para tablets e celulares (768px e abaixo) */
 @media (max-width: 768px) {
     .analise-container {
         grid-template-columns: 1fr;
@@ -147,7 +199,7 @@ section {
     }
 
     #resumo, #nova-transacao, #graficos {
-        grid-column: 1 / -1; 
+        grid-column: 1 / -1;
         max-width: 100%;
         min-width: 100%;
     }
@@ -160,14 +212,18 @@ section {
 
 /* --- Inputs de Texto/Número --- */
 #form-transacao input {
-    width: 100%; 
+    width: 100%;
     padding: 12px;
-    border: 1px solid var(--input-border); 
-    background-color: var(--input-bg); 
-    color: var(--text-color); 
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-color);
     border-radius: 6px;
     font-size: 1em;
     box-sizing: border-box;
+    margin-bottom: 10px;
+}
+#form-transacao input[type="date"] {
+    min-width: 100%;
 }
 
 /* --- Botões de Transação --- */
@@ -175,6 +231,7 @@ section {
     display: flex;
     gap: 15px;
     margin-top: 20px;
+    flex-wrap: wrap;
 }
 
 .btn-tipo {
@@ -186,7 +243,7 @@ section {
     font-weight: 700;
     flex-grow: 1;
     transition: background-color 0.3s, transform 0.1s;
-    color: white; 
+    color: white;
 }
 
 .btn-tipo.entrada { background-color: #28a745; }
@@ -195,6 +252,18 @@ section {
 .btn-tipo:hover {
     transform: translateY(-1px);
     opacity: 0.95;
+}
+
+/* 📱 AJUSTES DOS BOTÕES DE TRANSAÇÃO PARA TELAS MUITO PEQUENAS */
+@media (max-width: 480px) {
+    .btn-tipo {
+        flex-grow: 1;
+        flex-basis: 100%; /* Força cada botão a ocupar toda a largura e empilhar */
+        margin-bottom: 5px;
+    }
+    .botoes-tipo {
+        gap: 10px;
+    }
 }
 
 
@@ -209,7 +278,7 @@ section {
     transition: background-color 0.3s;
 }
 
-#theme-toggle { /* Estilo específico do toggle */
+#theme-toggle {
     background-color: gray;
     color: white;
 }
@@ -224,7 +293,7 @@ section {
 }
 
 .btn-controle.limpar {
-    background-color: rgb(255, 86, 86); /* Estilo do botão Sair */
+    background-color: rgb(255, 86, 86);
     color: white;
 }
 
@@ -238,48 +307,64 @@ section {
     padding: 12px;
     border: 1px solid var(--input-border);
     background-color: var(--input-bg);
-    color: var(--text-color); 
+    color: var(--text-color);
     border-radius: 6px;
     font-size: 1em;
     min-width: 180px;
     box-sizing: border-box;
 }
 
-/* --- Controle de Histórico e Filtro (Correção de Layout) --- */
+/* --- Controle de Histórico e Filtro --- */
 .filtro-mes {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* 🚨 Empurra o botão Mostrar Todos para a ponta */
+    justify-content: space-between;
     gap: 10px;
     margin-bottom: 20px;
     padding: 15px;
     border-radius: 8px;
-    background-color: var(--bg-secondary); 
+    background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
 }
-
-.filtro-mes label {
-    font-size: 1.1em;
-    font-weight: 600;
-    white-space: nowrap; 
-}
-
-.filtro-mes input { /* Permite que o input se expanda */
-    flex-grow: 1; 
-    max-width: 250px;
-}
-
-.filtro-mes button { /* Estilo para o botão Mostrar Todos */
-    padding: 8px 12px;
+.filtro-mes button {
+    padding: 10px 15px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 1em;
     font-weight: 600;
     background-color: gray;
     color: white;
     transition: background-color 0.3s;
-    flex-shrink: 0;
+}
+
+/* 📱 AJUSTE CHAVE: Força empilhamento dos filtros (Label, Input, Botão) mais cedo */
+@media (max-width: 500px) {
+    .filtro-mes {
+        flex-wrap: wrap; /* Permite que os itens quebrem a linha */
+        justify-content: flex-start;
+        padding: 10px;
+    }
+
+    .filtro-mes label {
+        width: 100%;
+        margin-bottom: 5px;
+        font-size: 1em;
+    }
+
+    .filtro-mes input {
+        flex-grow: 1;
+        max-width: none;
+        min-width: 100%; /* Garante 100% da largura */
+    }
+
+    .filtro-mes button {
+        flex-shrink: 0;
+        margin-top: 10px;
+        width: 100%; 
+        padding: 10px;
+
+    }
 }
 
 
@@ -287,13 +372,26 @@ section {
 .controles-historico {
     display: flex;
     align-items: center;
-    justify-content: center; /* Alinha o botão Exportar à esquerda */
+    justify-content: center;
     gap: 10px;
     margin-bottom: 20px;
     padding: 15px;
     border-radius: 8px;
-    background-color: var(--bg-secondary); 
+    background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
+}
+
+/* 📱 AJUSTE: Empilha os botões de controle Exportar/Limpar em telas menores */
+@media (max-width: 420px) {
+    .controles-historico {
+        flex-direction: column;
+        padding: 10px;
+    }
+    .controles-historico .btn-controle {
+        flex-grow: 1;
+        width: 100%;
+        margin: 5px 0;
+    }
 }
 
 
@@ -308,14 +406,42 @@ section {
     justify-content: space-between;
     align-items: center;
     transition: background-color 0.3s;
+    flex-wrap: wrap;
 }
 
 #lista-transacoes li.entrada { border-left: 6px solid #28a745; }
 #lista-transacoes li.saida { border-left: 6px solid #dc3545; }
 #lista-transacoes li strong { min-width: 120px; text-align: right; margin-right: 15px; font-weight: 700; }
 
+/* 📱 AJUSTE: Empilha os itens da lista para melhor visualização em mobile */
+@media (max-width: 500px) {
+    #lista-transacoes li {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+    #lista-transacoes li strong { /* Valor */
+        order: 1;
+        width: 100%;
+        text-align: left;
+        margin-right: 0;
+        margin-top: 5px;
+        font-size: 1.2em;
+    }
+    #lista-transacoes li span:first-of-type { /* Descrição */
+        order: 2;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .btn-deletar {
+        order: 3;
+        align-self: flex-end;
+    }
+}
+
+
 .btn-deletar {
-    background-color: #f44336; 
+    background-color: #f44336;
     color: white;
     padding: 8px 12px;
     border-radius: 6px;
@@ -328,10 +454,10 @@ section {
 }
 
 .chart-container {
-    max-width: 400px; 
-    max-height: 400px; 
-    margin: 0 auto; 
-    padding: 15px; 
+    max-width: 400px;
+    max-height: 400px;
+    margin: 0 auto;
+    padding: 15px;
     background-color: var(--bg-secondary);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
