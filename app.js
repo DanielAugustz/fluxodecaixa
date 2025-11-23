@@ -320,12 +320,10 @@ async function exportarParaXLSX() {
 
     // 1. Prepara os dados como um Array de Objetos
     const dadosPlanilha = transacoes.map(t => ({
-        ID: t.id,
         Data: t.data.substring(0, 10), 
         Tipo: t.tipo.toUpperCase(),
         Descrição: t.descricao,
         'Valor (R$)': t.valor, 
-        CriadoEm: t.created_at.substring(0, 10) 
     }));
     
     // 2. Cria a planilha (worksheet)
