@@ -1,0 +1,149 @@
+/* =========================================================================
+   1. ESTILOS BASE (MANTENDO CONSISTÊNCIA VISUAL)
+   ========================================================================= */
+
+:root {
+    --bg-primary: #cccccc;
+    --text-color: #333;
+    --input-bg: #bab6b6;
+    --input-border: #918e8e;
+    --card-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --text-color: #f1f1f1;
+    --input-bg: #282828;
+    --input-border: #666;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    
+    /* Centralização Total da Página */
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    
+    /* Tema */
+    background-color: var(--bg-primary); 
+    color: var(--text-color); 
+    transition: background-color 0.4s, color 0.4s;
+}
+
+h1 {
+    color: var(--text-color);
+    font-size: 2.5em;
+    font-weight: 600;
+    margin: 0 0 40px 0;
+    text-align: center;
+}
+
+/* =========================================================================
+   2. ESTILOS DO CARTÃO DE LOGIN (#auth-section)
+   ========================================================================= */
+
+#auth-section {
+    max-width: 450px;
+    width: 90%;
+    padding: 40px;
+    background-color: var(--bg-secondary);
+    border-radius: 18px;
+    box-shadow: var(--card-shadow);
+    border: none;
+    
+    /* Centralização e Layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+    transition: background-color 0.4s, box-shadow 0.4s;
+}
+
+#auth-section h2 {
+    color: var(--text-color);
+    font-size: 1.6em;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+/* Campos de Input */
+#auth-section label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+#auth-section input {
+    width: 100%; 
+    /* 🚨 MUDANÇA: Aumentando o padding para inputs maiores */
+    padding: 18px; 
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-color); 
+    border-radius: 8px; 
+    /* 🚨 MUDANÇA: Aumentando o tamanho da fonte */
+    font-size: 1.2em; 
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+#auth-section input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* =========================================================================
+   3. BOTÕES DE AÇÃO
+   ========================================================================= */
+
+.botoes-auth {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+    margin-top: 25px;
+    width: 100%; 
+}
+
+.botoes-auth button {
+    flex-grow: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1em;
+    color: white; 
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+#btn-login {
+    background-color: #007bff;
+}
+
+#btn-signup {
+    background-color: #28a745;
+}
+
+.botoes-auth button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+#auth-message {
+    color: #dc3545;
+    margin-top: 20px;
+    font-weight: 500;
+}

@@ -1,131 +1,221 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f4f4f4;
-    color: #333;
-    line-height: 1.6;
+/* =========================================================================
+   1. CORES DINÂMICAS E ESTILOS BASE
+   ========================================================================= */
+
+/* Variáveis CSS para Modo Claro (Padrão) */
+:root {
+    --bg-primary: #cccccc;
+    --bg-secondary: #ffffff;
+    --text-color: #333;
+    --header-bg: #c4e6ff; /* Ajustado: era e3f2fd, mantendo c4e6ff da sua última cópia */
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --border-color: rgb(189, 189, 189);
+    --input-bg: #ffffff;
+    --input-border: #ccc;
+    --list-border-color: rgb(189, 189, 189);
 }
 
-h1, h2 {
-    color: #0056b3;
+/* Cores para Modo Escuro */
+[data-theme="dark"] {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --text-color: #f1f1f1;
+    --header-bg: #282828;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --border-color: #444;
+    --input-bg: #282828;
+    --input-border: #666;
+    --list-border-color: #444;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: var(--bg-primary); 
+    color: var(--text-color); 
+    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+h1 {
+    color: var(--text-color);
+    font-size: 2.2em;
+    font-weight: 600;
+    margin: 0; 
+}
+
+h2 {
+    color: var(--text-color);
+    font-size: 1.5em;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 500;
+    text-align: center;
+    width: 100%;
 }
 
 section {
-    background-color: #fff;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: var(--bg-secondary); 
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 12px; 
+    box-shadow: var(--card-shadow); 
+    border: 1px solid var(--border-color); 
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 #resumo p {
-    font-size: 1.2em;
-    font-weight: bold;
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--text-color);
 }
 
-/* --- Estilos do Formulário --- */
-#form-transacao div {
-    margin-bottom: 10px;
+/* =========================================================================
+   2. LAYOUT GRID E CENTRALIZAÇÃO
+   ========================================================================= */
+
+.main-header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    position: relative; 
 }
 
-#form-transacao label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+.main-header-container h1 {
+    text-align: center; 
+    flex-grow: 1; 
+    margin: 0;
 }
 
+#theme-toggle {
+    position: absolute;
+    right: 0;
+    margin-right: 20px; 
+}
+
+.header-app {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--header-bg); 
+    padding: 15px 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    border: none;
+}
+
+.header-app p {
+    font-size: 1.5em;
+    margin: 0;
+    padding-right: 20px;
+}
+
+.analise-container {
+    display: grid;
+    grid-template-columns: 200px 1fr 400px; 
+    gap: 25px; 
+    margin-bottom: 25px;
+    align-items: center;
+}
+
+#resumo {
+    grid-column: 1 / 2;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+}
+
+#nova-transacao {
+    grid-column: 2 / 3; 
+    max-width: 100%;
+}
+
+#graficos {
+    grid-column: 3 / 4;
+    min-width: auto;
+}
+
+@media (max-width: 768px) {
+    .analise-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    #resumo, #nova-transacao, #graficos {
+        grid-column: 1 / -1; 
+        max-width: 100%;
+        min-width: 100%;
+    }
+}
+
+
+/* =========================================================================
+   3. FORMULÁRIOS E BOTÕES DE TRANSAÇÃO
+   ========================================================================= */
+
+/* --- Inputs de Texto/Número --- */
 #form-transacao input {
-    width: calc(100% - 22px);
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    width: 100%; 
+    padding: 12px;
+    border: 1px solid var(--input-border); 
+    background-color: var(--input-bg); 
+    color: var(--text-color); 
+    border-radius: 6px;
     font-size: 1em;
+    box-sizing: border-box;
 }
 
+/* --- Botões de Transação --- */
 .botoes-tipo {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
+    gap: 15px;
+    margin-top: 20px;
 }
 
 .btn-tipo {
-    padding: 10px 15px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 1em;
-    font-weight: bold;
+    font-weight: 700;
     flex-grow: 1;
+    transition: background-color 0.3s, transform 0.1s;
+    color: white; 
 }
 
-.btn-tipo.entrada {
-    background-color: #28a745; /* Verde */
-    color: white;
-}
-
-.btn-tipo.saida {
-    background-color: #dc3545; /* Vermelho */
-    color: white;
-}
+.btn-tipo.entrada { background-color: #28a745; }
+.btn-tipo.saida { background-color: #dc3545; }
 
 .btn-tipo:hover {
-    opacity: 0.9;
-}
-
-/* --- Estilos para o Filtro de Mês --- */
-.filtro-mes {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-    padding: 10px;
-    border: 1px solid #cce5ff;
-    border-radius: 5px;
-    background-color: #e6f2ff; 
-}
-
-#filtroMesAno {
-    padding: 8px;
-    border: 1px solid #007bff;
-    border-radius: 4px;
-    flex-grow: 1;
-}
-
-#btn-reset-filtro {
-    background-color: #6c757d; /* Cinza */
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
+    transform: translateY(-1px);
+    opacity: 0.95;
 }
 
 
-/* --- Estilos para os Controles (Exportar/Limpar) --- */
-.controles-historico {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f0f0f0;
-}
-
+/* --- Estilos para Botões de Controle (Toggle, Exportar, Sair) --- */
 .btn-controle {
     padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 0.9em;
-    font-weight: bold;
-    flex-grow: 1;
-    transition: background-color 0.2s;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+#theme-toggle { /* Estilo específico do toggle */
+    background-color: gray;
+    color: white;
 }
 
 .btn-controle.exportar {
-    background-color: #007bff; /* Azul */
+    background-color: #007bff;
     color: white;
 }
 
@@ -133,69 +223,116 @@ section {
     background-color: #0056b3;
 }
 
-
-/* --- Estilos da Lista de Transações --- */
-#lista-transacoes {
-    list-style: none;
-    padding: 0;
+.btn-controle.limpar {
+    background-color: rgb(255, 86, 86); /* Estilo do botão Sair */
+    color: white;
 }
 
+
+/* =========================================================================
+   4. CONTROLES DE HISTÓRICO E LISTA
+   ========================================================================= */
+
+/* --- Inputs de Filtro (Mês) --- */
+#filtroMesAno {
+    padding: 12px;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-color); 
+    border-radius: 6px;
+    font-size: 1em;
+    min-width: 180px;
+    box-sizing: border-box;
+}
+
+/* --- Controle de Histórico e Filtro (Correção de Layout) --- */
+.filtro-mes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 🚨 Empurra o botão Mostrar Todos para a ponta */
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: var(--bg-secondary); 
+    border: 1px solid var(--border-color);
+}
+
+.filtro-mes label {
+    font-size: 1.1em;
+    font-weight: 600;
+    white-space: nowrap; 
+}
+
+.filtro-mes input { /* Permite que o input se expanda */
+    flex-grow: 1; 
+    max-width: 250px;
+}
+
+.filtro-mes button { /* Estilo para o botão Mostrar Todos */
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 600;
+    background-color: gray;
+    color: white;
+    transition: background-color 0.3s;
+    flex-shrink: 0;
+}
+
+
+/* --- Container do Botão Exportar --- */
+.controles-historico {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Alinha o botão Exportar à esquerda */
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: var(--bg-secondary); 
+    border: 1px solid var(--border-color);
+}
+
+
+/* --- Lista de Transações --- */
 #lista-transacoes li {
-    background-color: #f9f9f9;
-    border: 1px solid #eee;
-    margin-bottom: 8px;
-    padding: 10px 15px;
-    border-radius: 5px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--list-border-color);
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.3s;
 }
 
-#lista-transacoes li.entrada {
-    border-left: 5px solid #28a745;
-}
+#lista-transacoes li.entrada { border-left: 6px solid #28a745; }
+#lista-transacoes li.saida { border-left: 6px solid #dc3545; }
+#lista-transacoes li strong { min-width: 120px; text-align: right; margin-right: 15px; font-weight: 700; }
 
-#lista-transacoes li.saida {
-    border-left: 5px solid #dc3545;
-}
-
-#lista-transacoes li span:nth-child(1) { /* Data */
-    font-size: 0.9em;
-    color: #666;
-    min-width: 90px;
-}
-
-#lista-transacoes li span:nth-child(2) { /* Descrição */
-    flex-grow: 1;
-    margin: 0 10px;
-}
-
-#lista-transacoes li strong { /* Valor */
-    min-width: 120px;
-    text-align: right;
-    margin-right: 15px;
-}
-
-/* --- Estilo para o botão de deletar --- */
 .btn-deletar {
     background-color: #f44336; 
     color: white;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.85em;
-    transition: background-color 0.2s;
-    flex-shrink: 0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8em;
+    transition: background-color 0.3s;
 }
 
 .btn-deletar:hover {
     background-color: #d32f2f;
 }
 
-/* --- Estilos do Gráfico --- */
 .chart-container {
-    width: 100%;
-    max-width: 500px;
-    margin: 20px auto;
+    max-width: 400px; 
+    max-height: 400px; 
+    margin: 0 auto; 
+    padding: 15px; 
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }

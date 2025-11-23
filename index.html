@@ -1,69 +1,76 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light"> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Fluxo de Caixa</title>
+    <title>Meu Fluxo de Caixa (Seguro)</title>
     
     <link rel="stylesheet" href="styles.css"> 
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     
-    <h1>Fluxo de Caixa Pessoal</h1>
+    <div class="main-header-container">
+        <h1>Fluxo de Caixa Pessoal</h1>
+        <button id="theme-toggle" class="btn-controle">🌙</button>
+    </div>
     
-    <section id="resumo">
-        <h2>Resumo</h2>
-        <p>Saldo Total: <span id="saldo">R$ 0,00</span></p>
-    </section>
-
-    <section id="nova-transacao">
-        <h2>Adicionar Nova Transação</h2>
-        <form id="form-transacao">
-            <div>
-                <label for="descricao">Descrição:</label>
-                <input type="text" id="descricao" required>
-            </div>
-            <div>
-                <label for="valor">Valor:</label>
-                <input type="number" id="valor" step="0.01" required>
-            </div>
-            <div class="botoes-tipo">
-                <button type="button" id="btn-entrada" class="btn-tipo entrada">Adicionar Entrada</button>
-                <button type="button" id="btn-saida" class="btn-tipo saida">Adicionar Saída</button>
-            </div>
-        </form>
-    </section>
-
-    <section id="graficos">
-        <h2>Visão Geral dos Gastos (Gráfico de Pizza)</h2>
-        <div class="chart-container">
-            <canvas id="gastosPizzaChart"></canvas>
-        </div>
-    </section>
-
-    <section id="transacoes-container">
-        <h2>Histórico de Transações</h2>
+    <div id="app-content">
         
-        <div class="filtro-mes">
-            <label for="filtroMesAno">Visualizar Mês:</label>
-            <input type="month" id="filtroMesAno"> 
-            <button id="btn-reset-filtro">Mostrar Todos</button>
+        <div class="header-app">
+            <p>Bem-vindo(a), <span id="user-email-display"></span>!</p>
+            <button id="btn-logout" class="btn-controle limpar">Sair 🚪</button>
         </div>
-        
-        <div class="controles-historico">
-            <button id="btn-exportar" class="btn-controle exportar">Exportar para Planilha (XLSX) 💾</button>
-        </div>
-        
-        <ul id="lista-transacoes">
-            </ul>
-    </section>
 
-    <script src="script.js"></script> 
+        <div class="analise-container">
+            
+            <section id="resumo">
+                <h2>Resumo</h2>
+                <p>Saldo Total: <span id="saldo">R$ 0,00</span></p>
+            </section>
+
+            <section id="nova-transacao">
+                <h2>Adicionar Nova Transação</h2>
+                <form id="form-transacao">
+                    <div><label for="descricao">Descrição:</label><input type="text" id="descricao" required></div>
+                    <div><label for="valor">Valor:</label><input type="number" id="valor" step="0.01" required></div>
+                    
+                    <div class="botoes-tipo">
+                        <button type="button" id="btn-entrada" class="btn-tipo entrada">Adicionar Entrada</button>
+                        <button type="button" id="btn-saida" class="btn-tipo saida">Adicionar Saída</button>
+                    </div>
+                </form>
+            </section>
+
+            <section id="graficos">
+                <h2>Visão Geral</h2>
+                <div class="chart-container">
+                    <canvas id="gastosPizzaChart"></canvas>
+                </div>
+            </section>
+        
+        </div>
+        <section id="transacoes-container">
+            <h2>Histórico de Transações</h2>
+            
+            <div class="filtro-mes">
+                <label for="filtroMesAno">Visualizar Mês:</label>
+                <input type="month" id="filtroMesAno"> 
+                <button id="btn-reset-filtro">Mostrar Todos</button>
+            </div>
+            
+            <div class="controles-historico">
+                <button id="btn-exportar" class="btn-controle exportar">Exportar para Planilha (XLSX) 💾</button>
+            </div>
+            
+            <ul id="lista-transacoes">
+                </ul>
+        </section>
+    </div>
+    
+    <script src="app.js"></script> 
 </body>
 </html>
