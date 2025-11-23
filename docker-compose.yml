@@ -1,0 +1,17 @@
+
+services:
+  cashflow-app:
+    container_name: fluxo_de_caixa_web
+    
+    # Constrói a imagem usando o Dockerfile na pasta atual
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      
+    # Mapeia a porta 8080 do seu computador para a porta 80 do container
+    ports:
+      - "8080:80"
+      
+    # Mapeia a pasta local para o container, permitindo atualizações em tempo real (hot-reloading)
+    volumes:
+      - .:/usr/share/nginx/html

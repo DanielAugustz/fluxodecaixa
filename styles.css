@@ -1,0 +1,201 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+h1, h2 {
+    color: #0056b3;
+}
+
+section {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#resumo p {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* --- Estilos do Formulário --- */
+#form-transacao div {
+    margin-bottom: 10px;
+}
+
+#form-transacao label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#form-transacao input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.botoes-tipo {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-tipo {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    flex-grow: 1;
+}
+
+.btn-tipo.entrada {
+    background-color: #28a745; /* Verde */
+    color: white;
+}
+
+.btn-tipo.saida {
+    background-color: #dc3545; /* Vermelho */
+    color: white;
+}
+
+.btn-tipo:hover {
+    opacity: 0.9;
+}
+
+/* --- Estilos para o Filtro de Mês --- */
+.filtro-mes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #cce5ff;
+    border-radius: 5px;
+    background-color: #e6f2ff; 
+}
+
+#filtroMesAno {
+    padding: 8px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    flex-grow: 1;
+}
+
+#btn-reset-filtro {
+    background-color: #6c757d; /* Cinza */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+/* --- Estilos para os Controles (Exportar/Limpar) --- */
+.controles-historico {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+}
+
+.btn-controle {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+    flex-grow: 1;
+    transition: background-color 0.2s;
+}
+
+.btn-controle.exportar {
+    background-color: #007bff; /* Azul */
+    color: white;
+}
+
+.btn-controle.exportar:hover {
+    background-color: #0056b3;
+}
+
+
+/* --- Estilos da Lista de Transações --- */
+#lista-transacoes {
+    list-style: none;
+    padding: 0;
+}
+
+#lista-transacoes li {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    margin-bottom: 8px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#lista-transacoes li.entrada {
+    border-left: 5px solid #28a745;
+}
+
+#lista-transacoes li.saida {
+    border-left: 5px solid #dc3545;
+}
+
+#lista-transacoes li span:nth-child(1) { /* Data */
+    font-size: 0.9em;
+    color: #666;
+    min-width: 90px;
+}
+
+#lista-transacoes li span:nth-child(2) { /* Descrição */
+    flex-grow: 1;
+    margin: 0 10px;
+}
+
+#lista-transacoes li strong { /* Valor */
+    min-width: 120px;
+    text-align: right;
+    margin-right: 15px;
+}
+
+/* --- Estilo para o botão de deletar --- */
+.btn-deletar {
+    background-color: #f44336; 
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-deletar:hover {
+    background-color: #d32f2f;
+}
+
+/* --- Estilos do Gráfico --- */
+.chart-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+}
