@@ -16,6 +16,8 @@ const saldoElement = document.getElementById('saldo');
 const formTransacao = document.getElementById('form-transacao');
 const descricaoInput = document.getElementById('descricao');
 const valorInput = document.getElementById('valor');
+// 🚨 NOVO: Referência do input de data
+const dataTransacaoInput = document.getElementById('data-transacao'); 
 const btnEntrada = document.getElementById('btn-entrada');
 const btnSaida = document.getElementById('btn-saida');
 const ctx = document.getElementById('gastosPizzaChart').getContext('2d'); 
@@ -57,6 +59,17 @@ if (savedTheme) {
 // ===========================================
 
 /**
+ * Define a data atual no input de data ao carregar.
+ */
+function setInitialDate() {
+    // Só executa se o elemento existir (ou seja, se estiver na index.html)
+    if (dataTransacaoInput) {
+        const dataAtual = new Date().toISOString().split('T')[0]; 
+        dataTransacaoInput.value = dataAtual;
+    }
+}
+
+/**
  * Trata o Logout e redireciona para a tela de login.
  */
 async function handleLogout() {
@@ -76,6 +89,7 @@ async function checkAuthAndInit() {
     }
     
     userEmailDisplay.textContent = session.user.email;
+    setInitialDate(); // Define a data inicial
     carregarTransacoes(); 
 }
 
@@ -148,11 +162,14 @@ async function carregarTransacoes(filtroMesAno = null) {
     listaTransacoes.innerHTML = ''; 
     let saldo = 0;
     let totalEntradas = 0;
-    let totalSaidas = 0;
+    let totalSaidasAbsoluto = 0; // Usado para o gráfico
     
 
     transacoes.forEach(transacao => {
         const li = document.createElement('li');
+        
+        // 🚨 CORREÇÃO VISUAL: Removemos o Math.abs() daqui.
+        // Agora, se o valor for negativo, ele mostrará o sinal de menos (ex: -R$ 50,00)
         const valorFormatado = new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL',
@@ -160,14 +177,15 @@ async function carregarTransacoes(filtroMesAno = null) {
         
         let tipoClasse = '';
         
-        // Cálculo do saldo e acumulação para o gráfico
-        if (transacao.tipo === 'entrada') {
-            saldo += transacao.valor;
+        // O saldo agora é apenas a SOMA direta de todos os valores.
+        saldo += transacao.valor; 
+        
+        // Classificação e acumulação para o gráfico baseada no sinal
+        if (transacao.valor >= 0) { // Entradas (Positivas)
             totalEntradas += transacao.valor; 
             tipoClasse = 'entrada';
-        } else if (transacao.tipo === 'saida') {
-            saldo -= transacao.valor;
-            totalSaidas += transacao.valor; 
+        } else { // Saídas (Negativas)
+            totalSaidasAbsoluto += Math.abs(transacao.valor); // Acumula o valor absoluto para o gráfico
             tipoClasse = 'saida';
         }
         
@@ -198,7 +216,7 @@ async function carregarTransacoes(filtroMesAno = null) {
     saldoElement.textContent = saldoFormatado;
 
     // CHAMA A FUNÇÃO DE GRÁFICO DE PIZZA
-    atualizarGraficoPizza(totalEntradas, totalSaidas);
+    atualizarGraficoPizza(totalEntradas, totalSaidasAbsoluto);
 }
 
 /**
@@ -214,20 +232,32 @@ async function adicionarTransacao(tipo) {
     }
 
     const descricao = descricaoInput.value.trim();
-    const valor = parseFloat(valorInput.value);
-    const dataAtual = new Date().toISOString().split('T')[0]; 
+    
+    // Captura o input. Math.abs garante que pegamos o número "limpo" (positivo)
+    let valorRaw = parseFloat(valorInput.value);
+    let valor = Math.abs(valorRaw); 
 
-    if (!descricao || isNaN(valor) || valor <= 0) { 
-        alert('Por favor, preencha a descrição e o valor corretamente.');
+    const dataTransacao = dataTransacaoInput.value; 
+
+    // Validação
+    if (!descricao || isNaN(valor) || valor === 0 || !dataTransacao) { 
+        alert('Por favor, preencha a descrição, um valor válido e selecione a data corretamente.');
         return;
+    }
+    
+    // 🚨 LÓGICA DE SINAL (GARANTIDA):
+    // Se for SAÍDA, força o sinal negativo.
+    // Se for ENTRADA, mantém positivo.
+    if (tipo === 'saida') {
+        valor = -valor; 
     }
 
     const novaTransacao = {
         descricao: descricao,
         valor: valor,
-        data: dataAtual, 
-        tipo: tipo,
-        user_id: user_id // Vincula a transação ao usuário logado
+        data: dataTransacao, 
+        tipo: tipo, 
+        user_id: user_id 
     };
 
     const { error } = await supabase
@@ -241,6 +271,7 @@ async function adicionarTransacao(tipo) {
     }
 
     formTransacao.reset();
+    setInitialDate(); 
     carregarTransacoes(filtroMesAnoInput.value);
 }
 
@@ -251,7 +282,7 @@ async function adicionarTransacao(tipo) {
 /**
  * Inicializa ou atualiza o Gráfico de PIZZA para balancear Entradas e Saídas.
  */
-function atualizarGraficoPizza(totalEntradas, totalSaidas) { 
+function atualizarGraficoPizza(totalEntradas, totalSaidasAbsoluto) { 
     if (gastosPizzaChart) {
         gastosPizzaChart.destroy();
     }
@@ -260,7 +291,7 @@ function atualizarGraficoPizza(totalEntradas, totalSaidas) {
     
     // TOTAIS E CORES FIXAS
     const labels = ['Entradas', 'Saídas'];
-    const data = [totalEntradas, totalSaidas];
+    const data = [totalEntradas, totalSaidasAbsoluto];
     
     const cores = [
         '#28a745',  // Verde para Entradas
@@ -290,7 +321,6 @@ function atualizarGraficoPizza(totalEntradas, totalSaidas) {
                     text: 'Volume Financeiro Total (Entradas vs. Saídas)'
                 }
             },
-            // As opções são mantidas simples para o gráfico de pizza.
         }
     });
 }
@@ -321,8 +351,9 @@ async function exportarParaXLSX() {
     // 1. Prepara os dados como um Array de Objetos
     const dadosPlanilha = transacoes.map(t => ({
         Data: t.data.substring(0, 10), 
-        Tipo: t.tipo.toUpperCase(),
+        Tipo: (t.valor >= 0 ? 'ENTRADA' : 'SAÍDA'), 
         Descrição: t.descricao,
+        // 🚨 CORREÇÃO: Removemos Math.abs() para o Excel também receber o negativo.
         'Valor (R$)': t.valor, 
     }));
     
@@ -345,17 +376,18 @@ async function exportarParaXLSX() {
     ws['!cols'] = wscols;
 
     const range = XLSX.utils.decode_range(ws['!ref']);
-    const COLUNA_CRIADO_EM = 5; 
+    const COLUNA_VALOR = 3; // Coluna D (índice 3)
+    const COLUNA_TIPO = 1; // Coluna B (índice 1)
     
     for(let R = range.s.r; R <= range.e.r; ++R) {
-        const cell_tipo_address = R > 0 ? XLSX.utils.encode_cell({r:R, c:2}) : null; 
+        const cell_tipo_address = R > 0 ? XLSX.utils.encode_cell({r:R, c:COLUNA_TIPO}) : null; 
         const tipo_valor = R > 0 && ws[cell_tipo_address] ? ws[cell_tipo_address].v : '';
         
         let cor_fundo = '';
         if (tipo_valor === 'ENTRADA') {
-            cor_fundo = "FFCCFFCC"; 
-        } else if (tipo_valor === 'SAIDA') {
-            cor_fundo = "FFFFCCCC"; 
+            cor_fundo = "FFCCFFCC"; // Verde Claro
+        } else if (tipo_valor === 'SAÍDA') { 
+            cor_fundo = "FFFFCCCC"; // Vermelho Claro
         } else {
             cor_fundo = "FF888888"; 
         }
@@ -377,14 +409,10 @@ async function exportarParaXLSX() {
                 ws[cell_address].s.alignment = { horizontal: "center" };
             }
             
-            if (C === 4 && R > 0) {
+            if (C === COLUNA_VALOR && R > 0) {
                 ws[cell_address].z = 'R$ #,##0.00'; 
             }
             
-            if (C === COLUNA_CRIADO_EM) {
-                ws[cell_address].t = 's'; 
-                ws[cell_address].z = '@'; 
-            }
         }
     }
     

@@ -2,6 +2,13 @@
    1. CORES DINÂMICAS E ESTILOS BASE
    ========================================================================= */
 
+/* 🚨 CORREÇÃO CRUCIAL: Reset Global de Box-Sizing
+   Isso impede que padding e bordas aumentem o tamanho final dos elementos,
+   evitando a barra de rolagem horizontal (overflow). */
+* {
+    box-sizing: border-box;
+}
+
 /* Variáveis CSS para Modo Claro (Padrão) */
 :root {
     --bg-primary: #cccccc;
@@ -36,6 +43,9 @@ body {
     color: var(--text-color);
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
+    /* Garante que não haja rolagem horizontal no corpo da página */
+    overflow-x: hidden;
+    width: 100%;
 }
 
 h1 {
@@ -74,13 +84,13 @@ section {
 /* 📱 AJUSTES GERAIS PARA TELAS PEQUENAS (420px e abaixo) */
 @media (max-width: 420px) {
     body {
-        padding: 10px; /* Reduz o padding para ganhar espaço */
+        padding: 10px; 
     }
     h1 {
-        font-size: 1.6em; /* Torna o título menor */
+        font-size: 1.6em; 
     }
     section {
-        padding: 15px; /* Reduz o padding das seções */
+        padding: 15px; 
         margin-bottom: 15px;
     }
 }
@@ -98,6 +108,7 @@ section {
     border-bottom: 2px solid var(--border-color);
     padding-bottom: 10px;
     position: relative;
+    width: 100%;
 }
 
 .main-header-container h1 {
@@ -115,7 +126,7 @@ section {
 /* 📱 AJUSTES DO CABEÇALHO PARA MOBILE */
 @media (max-width: 768px) {
     .main-header-container {
-        padding-right: 80px; /* Cria espaço para o toggle */
+        padding-right: 80px; 
     }
     #theme-toggle {
         right: 10px;
@@ -134,7 +145,7 @@ section {
         margin-bottom: 15px;
     }
     #theme-toggle {
-        position: static; /* Volta para o fluxo normal */
+        position: static; 
         margin-right: 0;
     }
 }
@@ -149,6 +160,7 @@ section {
     border-radius: 12px;
     margin-bottom: 25px;
     border: none;
+    width: 100%;
 }
 @media (max-width: 480px) {
     .header-app {
@@ -167,10 +179,12 @@ section {
 
 .analise-container {
     display: grid;
-    grid-template-columns: 200px 1fr 400px;
+    /* 🚨 AJUSTE FINO: Reduzi ligeiramente os mínimos (200px e 300px) para evitar overflow em telas médias */
+    grid-template-columns: minmax(200px, 1fr) 2fr minmax(300px, 1fr);
     gap: 25px;
     margin-bottom: 25px;
     align-items: center;
+    width: 100%;
 }
 
 #resumo {
@@ -179,6 +193,8 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    text-align: center; 
+    align-items: center;
 }
 
 #nova-transacao {
@@ -189,12 +205,13 @@ section {
 #graficos {
     grid-column: 3 / 4;
     min-width: auto;
+    width: 100%; 
 }
 
-/* 🚨 MANTIDO: Media Query principal para tablets e celulares (768px e abaixo) */
-@media (max-width: 768px) {
+/* 🚨 MUDANÇA: Breakpoint aumentado para garantir que em tablets ele já quebre para coluna única, evitando espremer */
+@media (max-width: 1024px) {
     .analise-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; 
         gap: 20px;
     }
 
@@ -210,7 +227,6 @@ section {
    3. FORMULÁRIOS E BOTÕES DE TRANSAÇÃO
    ========================================================================= */
 
-/* --- Inputs de Texto/Número --- */
 #form-transacao input {
     width: 100%;
     padding: 12px;
@@ -219,12 +235,26 @@ section {
     color: var(--text-color);
     border-radius: 6px;
     font-size: 1em;
-    box-sizing: border-box;
     margin-bottom: 10px;
 }
 #form-transacao input[type="date"] {
     min-width: 100%;
 }
+
+/* Rótulo da Data */
+label[for="data-transacao"] {
+    font-size: 1.3em; 
+    font-weight: 700;
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#data-transacao {
+    font-size: 1.2em !important; 
+    padding: 14px !important; 
+}
+
 
 /* --- Botões de Transação --- */
 .botoes-tipo {
@@ -254,11 +284,10 @@ section {
     opacity: 0.95;
 }
 
-/* 📱 AJUSTES DOS BOTÕES DE TRANSAÇÃO PARA TELAS MUITO PEQUENAS */
 @media (max-width: 480px) {
     .btn-tipo {
         flex-grow: 1;
-        flex-basis: 100%; /* Força cada botão a ocupar toda a largura e empilhar */
+        flex-basis: 100%; 
         margin-bottom: 5px;
     }
     .botoes-tipo {
@@ -267,7 +296,7 @@ section {
 }
 
 
-/* --- Estilos para Botões de Controle (Toggle, Exportar, Sair) --- */
+/* --- Estilos para Botões de Controle --- */
 .btn-controle {
     padding: 10px 15px;
     border: none;
@@ -302,7 +331,6 @@ section {
    4. CONTROLES DE HISTÓRICO E LISTA
    ========================================================================= */
 
-/* --- Inputs de Filtro (Mês) --- */
 #filtroMesAno {
     padding: 12px;
     border: 1px solid var(--input-border);
@@ -311,7 +339,6 @@ section {
     border-radius: 6px;
     font-size: 1em;
     min-width: 180px;
-    box-sizing: border-box;
 }
 
 /* --- Controle de Histórico e Filtro --- */
@@ -338,10 +365,9 @@ section {
     transition: background-color 0.3s;
 }
 
-/* 📱 AJUSTE CHAVE: Força empilhamento dos filtros (Label, Input, Botão) mais cedo */
 @media (max-width: 500px) {
     .filtro-mes {
-        flex-wrap: wrap; /* Permite que os itens quebrem a linha */
+        flex-wrap: wrap; 
         justify-content: flex-start;
         padding: 10px;
     }
@@ -355,7 +381,7 @@ section {
     .filtro-mes input {
         flex-grow: 1;
         max-width: none;
-        min-width: 100%; /* Garante 100% da largura */
+        min-width: 100%; 
     }
 
     .filtro-mes button {
@@ -381,7 +407,6 @@ section {
     border: 1px solid var(--border-color);
 }
 
-/* 📱 AJUSTE: Empilha os botões de controle Exportar/Limpar em telas menores */
 @media (max-width: 420px) {
     .controles-historico {
         flex-direction: column;
@@ -413,14 +438,13 @@ section {
 #lista-transacoes li.saida { border-left: 6px solid #dc3545; }
 #lista-transacoes li strong { min-width: 120px; text-align: right; margin-right: 15px; font-weight: 700; }
 
-/* 📱 AJUSTE: Empilha os itens da lista para melhor visualização em mobile */
 @media (max-width: 500px) {
     #lista-transacoes li {
         flex-direction: column;
         align-items: flex-start;
         padding: 10px;
     }
-    #lista-transacoes li strong { /* Valor */
+    #lista-transacoes li strong { 
         order: 1;
         width: 100%;
         text-align: left;
@@ -428,7 +452,7 @@ section {
         margin-top: 5px;
         font-size: 1.2em;
     }
-    #lista-transacoes li span:first-of-type { /* Descrição */
+    #lista-transacoes li span:first-of-type { 
         order: 2;
         width: 100%;
         margin-bottom: 10px;
@@ -454,11 +478,13 @@ section {
 }
 
 .chart-container {
-    max-width: 400px;
+    max-width: 100%; 
     max-height: 400px;
     margin: 0 auto;
     padding: 15px;
     background-color: var(--bg-secondary);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: center;
 }
