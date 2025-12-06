@@ -168,8 +168,7 @@ async function carregarTransacoes(filtroMesAno = null) {
     transacoes.forEach(transacao => {
         const li = document.createElement('li');
         
-        // 🚨 CORREÇÃO VISUAL: Removemos o Math.abs() daqui.
-        // Agora, se o valor for negativo, ele mostrará o sinal de menos (ex: -R$ 50,00)
+        // CORREÇÃO VISUAL: Removemos o Math.abs() daqui.
         const valorFormatado = new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL',
@@ -233,7 +232,7 @@ async function adicionarTransacao(tipo) {
 
     const descricao = descricaoInput.value.trim();
     
-    // Captura o input. Math.abs garante que pegamos o número "limpo" (positivo)
+    // Captura o input. Math.abs garante que pegamos o número "limpo"
     let valorRaw = parseFloat(valorInput.value);
     let valor = Math.abs(valorRaw); 
 
@@ -245,9 +244,7 @@ async function adicionarTransacao(tipo) {
         return;
     }
     
-    // 🚨 LÓGICA DE SINAL (GARANTIDA):
-    // Se for SAÍDA, força o sinal negativo.
-    // Se for ENTRADA, mantém positivo.
+    // LÓGICA DE SINAL:
     if (tipo === 'saida') {
         valor = -valor; 
     }
@@ -338,6 +335,7 @@ async function exportarParaXLSX() {
         return;
     }
     
+    // 1. Busca os dados
     const { data: transacoes, error } = await supabase
         .from('transacoes')
         .select('*')
@@ -348,19 +346,29 @@ async function exportarParaXLSX() {
         return;
     }
 
-    // 1. Prepara os dados como um Array de Objetos
+    // 2. Prepara os dados como um Array de Objetos
     const dadosPlanilha = transacoes.map(t => ({
         Data: t.data.substring(0, 10), 
         Tipo: (t.valor >= 0 ? 'ENTRADA' : 'SAÍDA'), 
         Descrição: t.descricao,
-        // 🚨 CORREÇÃO: Removemos Math.abs() para o Excel também receber o negativo.
         'Valor (R$)': t.valor, 
     }));
     
-    // 2. Cria a planilha (worksheet)
+    // 🚨 NOVO: Cálculo do TOTAL DO MÊS (ou total exportado)
+    const saldoTotal = transacoes.reduce((acc, t) => acc + t.valor, 0);
+
+    // 🚨 NOVO: Adiciona a linha de TOTAL ao final do array
+    dadosPlanilha.push({
+        Data: '',
+        Tipo: '',
+        Descrição: 'SALDO TOTAL', // Texto "SALDO TOTAL" na coluna Descrição
+        'Valor (R$)': saldoTotal
+    });
+    
+    // 3. Cria a planilha (worksheet)
     const ws = XLSX.utils.json_to_sheet(dadosPlanilha);
     
-    // 3. Aplica Formatação e Estilo
+    // 4. Aplica Formatação e Estilo
     
     const max_width = dadosPlanilha.reduce((w, r) => {
         Object.keys(r).forEach(k => {
@@ -376,20 +384,27 @@ async function exportarParaXLSX() {
     ws['!cols'] = wscols;
 
     const range = XLSX.utils.decode_range(ws['!ref']);
-    const COLUNA_VALOR = 3; // Coluna D (índice 3)
-    const COLUNA_TIPO = 1; // Coluna B (índice 1)
+    const COLUNA_VALOR = 3; // Coluna D
+    const COLUNA_TIPO = 1; // Coluna B
     
     for(let R = range.s.r; R <= range.e.r; ++R) {
         const cell_tipo_address = R > 0 ? XLSX.utils.encode_cell({r:R, c:COLUNA_TIPO}) : null; 
         const tipo_valor = R > 0 && ws[cell_tipo_address] ? ws[cell_tipo_address].v : '';
         
         let cor_fundo = '';
-        if (tipo_valor === 'ENTRADA') {
-            cor_fundo = "FFCCFFCC"; // Verde Claro
-        } else if (tipo_valor === 'SAÍDA') { 
-            cor_fundo = "FFFFCCCC"; // Vermelho Claro
+        
+        // 🚨 NOVO: Verifica se é a ÚLTIMA LINHA para destacar o Total
+        if (R === range.e.r) {
+             cor_fundo = "FFADD8E6"; // Azul Claro para o Total
         } else {
-            cor_fundo = "FF888888"; 
+            // Lógica padrão para Entradas e Saídas
+            if (tipo_valor === 'ENTRADA') {
+                cor_fundo = "FFCCFFCC"; // Verde Claro
+            } else if (tipo_valor === 'SAÍDA') { 
+                cor_fundo = "FFFFCCCC"; // Vermelho Claro
+            } else {
+                cor_fundo = "FF888888"; 
+            }
         }
         
         for(let C = range.s.c; C <= range.e.e; ++C) {
@@ -400,19 +415,24 @@ async function exportarParaXLSX() {
             if (!ws[cell_address].s) ws[cell_address].s = {};
 
             ws[cell_address].s.alignment = { horizontal: "center", vertical: "center" };
-
             ws[cell_address].s.fill = { fgColor: { rgb: cor_fundo } };
 
+            // Estilo do Cabeçalho
             if (R === 0) {
                 ws[cell_address].s.fill = { fgColor: { rgb: "FF888888" } }; 
                 ws[cell_address].s.font = { bold: true, color: { rgb: "FFFFFFFF" } }; 
                 ws[cell_address].s.alignment = { horizontal: "center" };
             }
             
+            // 🚨 NOVO: Estilo da Linha de TOTAL (Negrito)
+            if (R === range.e.r) {
+                 ws[cell_address].s.font = { bold: true, sz: 12 }; // Negrito e maior
+            }
+
+            // Formatação de Moeda na coluna de Valor
             if (C === COLUNA_VALOR && R > 0) {
                 ws[cell_address].z = 'R$ #,##0.00'; 
             }
-            
         }
     }
     
